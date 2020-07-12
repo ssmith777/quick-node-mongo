@@ -1,14 +1,32 @@
+
+// get all
 GET http://localhost:3000/subscribers
 
 ###
-GET http://localhost:3000/subscribers/18
+// get one
+GET http://localhost:3000/subscribers/5f071a87f8414d597f81cc9d
 
 ###
 
+//Add one
 POST http://localhost:3000/subscribers
 Content-Type: application/json
 
 {
-    "name" : "teddy ",
+    "name" : "record 1",
+    "subscribedToChannel" : "Web Dev Channel"
+}
+
+###
+DELETE http://localhost:3000/subscribers/5f071a7df8414d597f81cc9c
+
+
+// patch
+###
+PATCH http://localhost:3000/subscribers/5f071a87f8414d597f81cc9d
+Content-Type: application/json
+
+{
+    "name" : "telle",
     "subscribedToChannel" : "Web Dev Channel"
 }

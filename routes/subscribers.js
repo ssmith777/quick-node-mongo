@@ -12,20 +12,9 @@ router.get('/', async (req, res) => {
   }
 });
 
-// // Creating One
-// router.post('/', async (req, res) => {
-//   try {
-//     const subscriber = new Subscriber({
-//       name: req.body.name,
-//       subscribedToChannel: req.body.subscribedToChannel,
-//     });
-//     const newSubscriber = await subscriber.save();
-//     res.json(newSubscriber);
-//   } catch (err) {
-//     res.status(400).json({ message: err.message });
-//   }
-// });
-// Creating one
+/**
+ * create one
+ */
 router.post('/', async (req, res) => {
   const subscriber = new Subscriber({
     name: req.body.name,
@@ -33,18 +22,60 @@ router.post('/', async (req, res) => {
   });
   try {
     const newSubscriber = await subscriber.save();
-    res.status(201).json(newSubscriber);
+    console.log(typeof newSubscriber);
+    if (newSubscriber != null) {
+      res.status(201).json({ message: 'saved' });
+    }
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
 
-router.post('/', (req, res) => {});
+// get one
+router.get('/:id', getSubscribers, async (req, res) => {
+  await res.send(res.subscriber);
+});
 
 // Updating One
-router.patch('/:id', (req, res) => {});
+router.patch('/:id', getSubscribers, async (req, res) => {
+  if (req.body.name != null) {
+    res.subscriber.name = req.body.name;
+  }
+
+  if (req.body.subscribedToChannel != null) {
+    res.subscriber.subscribedToChannel = req.body.subscribedToChannel;
+  }
+
+  try {
+    const updatedSubscriber = await res.subscriber.save();
+    res.json(updatedSubscriber);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 // Deleting One
-router.delete('/:id', (req, res) => {});
+router.delete('/:id', getSubscribers, async (req, res) => {
+  try {
+    await res.subscriber.remove();
+    res.json({ message: 'Deleted subscriber' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+async function getSubscribers(req, res, next) {
+  let subscriber;
+  try {
+    subscriber = await Subscriber.findById(req.params.id);
+    if (subscriber === null) {
+      return res.status(404).json({ message: 'Cannot find subscriber' });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+  res.subscriber = subscriber;
+  next();
+}
 
 module.exports = router;
