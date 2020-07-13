@@ -12,10 +12,28 @@ GET http://localhost:3000/subscribers/5f071a87f8414d597f81cc9d
 POST http://localhost:3000/subscribers
 Content-Type: application/json
 
-{
+[
+    {
     "name" : "record 1",
     "subscribedToChannel" : "Web Dev Channel"
-}
+    }
+]
+
+###
+
+//Add many
+POST http://localhost:3000/subscribers/im/
+Content-Type: application/json
+[
+    {
+    "name" : "multi 1",
+    "subscribedToChannel" : "Web multi 11"
+    },
+    {
+    "name" : "multi 2",
+    "subscribedToChannel" : "Web multi 2"
+    }
+]
 
 ###
 DELETE http://localhost:3000/subscribers/5f071a7df8414d597f81cc9c

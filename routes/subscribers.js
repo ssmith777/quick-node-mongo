@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Subscriber = require('../models/subscribers');
 
-// Getting All
+/**
+ * Get All
+ */
 router.get('/', async (req, res) => {
   try {
     const subscribers = await Subscriber.find();
@@ -22,7 +24,6 @@ router.post('/', async (req, res) => {
   });
   try {
     const newSubscriber = await subscriber.save();
-    console.log(typeof newSubscriber);
     if (newSubscriber != null) {
       res.status(201).json({ message: 'saved' });
     }
@@ -31,12 +32,29 @@ router.post('/', async (req, res) => {
   }
 });
 
-// get one
-router.get('/:id', getSubscribers, async (req, res) => {
-  await res.send(res.subscriber);
+/**
+ * insert many
+ */
+router.post('/im/', async (req, res) => {
+  try {
+    const { body } = req;
+    const data = await Subscriber.insertMany(body);
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
-// Updating One
+/**
+ *  Get One
+ */
+router.get('/:id', getSubscribers, (req, res) => {
+  res.send(res.subscriber);
+});
+
+/**
+ * Update One
+ */
 router.patch('/:id', getSubscribers, async (req, res) => {
   if (req.body.name != null) {
     res.subscriber.name = req.body.name;
@@ -54,7 +72,10 @@ router.patch('/:id', getSubscribers, async (req, res) => {
   }
 });
 
-// Deleting One
+/**
+ * Delete One
+ */
+
 router.delete('/:id', getSubscribers, async (req, res) => {
   try {
     await res.subscriber.remove();
