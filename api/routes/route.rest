@@ -4,7 +4,7 @@ GET http://localhost:3000/subscribers
 
 ###
 // get one
-GET http://localhost:3000/subscribers/5f071a87f8414d597f81cc9d
+GET http://localhost:3000/subscribers/5f1474182b837f0f1db7db95
 
 ###
 
@@ -12,12 +12,12 @@ GET http://localhost:3000/subscribers/5f071a87f8414d597f81cc9d
 POST http://localhost:3000/subscribers
 Content-Type: application/json
 
-[
+
     {
-    "name" : "record 1",
+    "name" : "record test",
     "subscribedToChannel" : "Web Dev Channel"
     }
-]
+
 
 ###
 

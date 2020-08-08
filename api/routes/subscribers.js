@@ -1,11 +1,11 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Subscriber = require('../models/subscribers');
+const Subscriber = require("../models/subscribers");
 
 /**
  * Get All
  */
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const subscribers = await Subscriber.find();
     res.json(subscribers);
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
 /**
  * create one
  */
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   const subscriber = new Subscriber({
     name: req.body.name,
     subscribedToChannel: req.body.subscribedToChannel,
@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
   try {
     const newSubscriber = await subscriber.save();
     if (newSubscriber != null) {
-      res.status(201).json({ message: 'saved' });
+      res.status(201).json({ message: "saved" });
     }
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
 /**
  * insert many
  */
-router.post('/im/', async (req, res) => {
+router.post("/im/", async (req, res) => {
   try {
     const { body } = req;
     const data = await Subscriber.insertMany(body);
@@ -48,14 +48,14 @@ router.post('/im/', async (req, res) => {
 /**
  *  Get One
  */
-router.get('/:id', getSubscribers, (req, res) => {
+router.get("/:id", getSubscribers, (req, res) => {
   res.send(res.subscriber);
 });
 
 /**
  * Update One
  */
-router.patch('/:id', getSubscribers, async (req, res) => {
+router.patch("/:id", getSubscribers, async (req, res) => {
   if (req.body.name != null) {
     res.subscriber.name = req.body.name;
   }
@@ -76,21 +76,30 @@ router.patch('/:id', getSubscribers, async (req, res) => {
  * Delete One
  */
 
-router.delete('/:id', getSubscribers, async (req, res) => {
+router.delete("/:id", getSubscribers, async (req, res) => {
   try {
     await res.subscriber.remove();
-    res.json({ message: 'Deleted subscriber' });
+    res.json({ message: "Deleted subscriber" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
+//
+
+const getDeletedData = async (filter) => {
+  const subscriber = await Subscriber.find({ filter });
+  await Subscriber.deleteMany({ filter });
+
+  return subscriber;
+};
 
 async function getSubscribers(req, res, next) {
   let subscriber;
   try {
     subscriber = await Subscriber.findById(req.params.id);
     if (subscriber === null) {
-      return res.status(404).json({ message: 'Cannot find subscriber' });
+      return res.status(404).json({ message: "Cannot find subscriber" });
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });
